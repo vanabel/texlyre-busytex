@@ -6,9 +6,9 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/TeXlyre/texlyre-busytex.git"
+        "url": "git+https://github.com/vanabel/texlyre-busytex.git"
     },
-    "homepage": "https://texlyre.github.io/texlyre-busytex/",
+    "homepage": "https://github.com/vanabel/texlyre-busytex",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "type": "module",
