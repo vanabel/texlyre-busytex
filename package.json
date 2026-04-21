@@ -1,6 +1,6 @@
 {
     "name": "@vanabel/texlyre-busytex",
-    "version": "0.1.4-beta",
+    "version": "0.1.5-beta",
     "description": "Run LaTeX compilation (pdflatex, xelatex, lualatex) in the browser using WebAssembly",
     "author": "Fares Abawi <fares@abawi.me> (https://abawi.me)",
     "license": "MIT",
