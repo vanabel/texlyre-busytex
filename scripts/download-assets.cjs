@@ -8,9 +8,35 @@ const execAsync = promisify(exec);
 
 const packageJson = require('../package.json');
 const VERSION = `v${packageJson.version}`;
-const REPO = 'TeXlyre/texlyre-busytex';
-const RELEASE_TAG = `assets-${VERSION}`;
+const DEFAULT_REPO = 'TeXlyre/texlyre-busytex';
+const RELEASE_TAG = process.env.BUSYTEX_RELEASE_TAG || `assets-${VERSION}`;
 const ARCHIVE_NAME = 'busytex-assets.tar.gz';
+
+function normalizeRepoFromUrl(url) {
+    if (!url || typeof url !== 'string') return null;
+    const trimmed = url.trim();
+    const m = trimmed.match(/github\.com[:/]([^/]+\/[^/]+?)(?:\.git)?$/i);
+    return m ? m[1] : null;
+}
+
+function resolveRepo() {
+    if (process.env.BUSYTEX_RELEASE_REPO) {
+        return process.env.BUSYTEX_RELEASE_REPO.trim();
+    }
+
+    const repoField = packageJson.repository;
+    if (typeof repoField === 'string') {
+        const parsed = normalizeRepoFromUrl(repoField);
+        if (parsed) return parsed;
+    } else if (repoField && typeof repoField === 'object') {
+        const parsed = normalizeRepoFromUrl(repoField.url);
+        if (parsed) return parsed;
+    }
+
+    return DEFAULT_REPO;
+}
+
+const REPO = resolveRepo();
 const DOWNLOAD_URL = `https://github.com/${REPO}/releases/download/${RELEASE_TAG}/${ARCHIVE_NAME}`;
 
 async function downloadAssets(destination = './public/core') {
@@ -30,6 +56,7 @@ async function downloadAssets(destination = './public/core') {
 
     console.log('Downloading BusyTeX assets from GitHub Releases...');
     console.log(`Version: ${VERSION}`);
+    console.log(`Repository: ${REPO}`);
     console.log(`Release: ${RELEASE_TAG}\n`);
 
     await downloadFile(DOWNLOAD_URL, archivePath);
@@ -143,9 +170,10 @@ if (require.main === module) {
     downloadAssets(dest).catch(err => {
         console.error('\n✗ Download failed:', err.message);
         console.error('\nPlease ensure:');
-        console.error(`1. Release ${RELEASE_TAG} exists`);
+        console.error(`1. Release ${RELEASE_TAG} exists in ${REPO}`);
         console.error('2. Archive is uploaded to the release');
         console.error('3. You have internet connection');
+        console.error('4. If needed, override with BUSYTEX_RELEASE_REPO / BUSYTEX_RELEASE_TAG');
         process.exit(1);
     });
 }
