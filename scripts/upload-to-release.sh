@@ -1,7 +1,8 @@
 #!/bin/bash
 
 VERSION=$(node -p "require('./package.json').version")
-REPO="TeXlyre/texlyre-busytex"
+REMOTE_URL=$(git remote get-url origin)
+REPO=$(echo "$REMOTE_URL" | sed -E 's#(git@github.com:|https://github.com/)##; s#\.git$##')
 RELEASE_TAG="assets-v$VERSION"
 ARCHIVE_NAME="busytex-assets.tar.gz"
 
