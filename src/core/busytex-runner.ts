@@ -163,6 +163,7 @@ export class BusyTexRunner {
                         success: data.exit_code === 0,
                         pdf: data.pdf,
                         synctex: data.synctex,
+                        bbl: data.bbl,
                         log: data.log,
                         exitCode: data.exit_code,
                         logs: data.logs
@@ -205,6 +206,7 @@ export class BusyTexRunner {
             success: result.exit_code === 0,
             pdf: result.pdf,
             synctex: result.synctex,
+            bbl: result.bbl,
             log: result.log,
             exitCode: result.exit_code,
             logs: result.logs

@@ -21,6 +21,7 @@ export interface CompileResult {
     success: boolean;
     pdf?: Uint8Array;
     synctex?: Uint8Array;
+    bbl?: string;
     log: string;
     exitCode: number;
     logs: LogEntry[];

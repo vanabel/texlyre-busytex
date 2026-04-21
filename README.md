@@ -182,6 +182,7 @@ compile(options: CompileOptions): Promise<CompileResult>
 - `success`: Compilation succeeded
 - `pdf?`: PDF output as Uint8Array
 - `synctex?`: SyncTeX output as Uint8Array
+- `bbl?`: BBL output as string (when bibliography is generated)
 - `log`: Compilation log
 - `exitCode`: Process exit code
 - `logs`: Detailed log entries
