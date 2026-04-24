@@ -2,10 +2,10 @@
 
 Run LaTeX compilation directly in your browser using WebAssembly. Supports XeLaTeX, PdfLaTeX, and LuaLaTeX with BibTeX integration.
 
-[![npm version](https://img.shields.io/npm/v/texlyre-busytex.svg)](https://www.npmjs.com/package/texlyre-busytex)
+[![npm version](https://img.shields.io/npm/v/%40vanabel%2Ftexlyre-busytex.svg)](https://www.npmjs.com/package/@vanabel/texlyre-busytex)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Live Demo](https://texlyre.github.io/texlyre-busytex/) | [GitHub](https://github.com/TeXlyre/texlyre-busytex)
+[Live Demo](https://texlyre.github.io/texlyre-busytex/) | [GitHub](https://github.com/vanabel/texlyre-busytex)
 
 ## Features
 
@@ -19,7 +19,7 @@ Run LaTeX compilation directly in your browser using WebAssembly. Supports XeLaT
 
 ## Installation
 ```bash
-npm install texlyre-busytex
+npm install @vanabel/texlyre-busytex
 ```
 
 ### Download Assets
@@ -40,7 +40,7 @@ Assets will be downloaded to `<destination>/busytex/` directory.
 
 ### Basic Example
 ```javascript
-import { BusyTexRunner, XeLatex } from 'texlyre-busytex';
+import { BusyTexRunner, XeLatex } from '@vanabel/texlyre-busytex';
 
 const runner = new BusyTexRunner({
   busytexBasePath: '/core/busytex'
@@ -116,7 +116,7 @@ const result = await xelatex.compile({
 
 ### Using PdfLaTeX or LuaLaTeX
 ```javascript
-import { PdfLatex, LuaLatex } from 'texlyre-busytex';
+import { PdfLatex, LuaLatex } from '@vanabel/texlyre-busytex';
 
 const pdflatex = new PdfLatex(runner);
 const result = await pdflatex.compile({ input: '...' });
@@ -209,6 +209,17 @@ Then open http://localhost:3000
 ```bash
 # Create archive and upload to GitHub Releases
 npm run upload-assets
+```
+
+### Repack Assets Manually (Maintainers)
+```bash
+# Rebuild local BusyTeX assets archive from the downloaded directory
+rm -f public/core/busytex-assets.tar.gz
+tar -czf public/core/busytex-assets.tar.gz -C public/core busytex
+
+# Optional: verify archive content and checksum
+tar -tzf public/core/busytex-assets.tar.gz | head -n 40
+shasum -a 256 public/core/busytex-assets.tar.gz > public/core/busytex-assets.tar.gz.sha256
 ```
 
 ## Contributing
