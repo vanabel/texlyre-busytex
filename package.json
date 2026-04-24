@@ -1,6 +1,6 @@
 {
     "name": "@vanabel/texlyre-busytex",
-    "version": "0.1.6-beta",
+    "version": "0.1.7-beta",
     "description": "Run LaTeX compilation (pdflatex, xelatex, lualatex) in the browser using WebAssembly",
     "author": "Fares Abawi <fares@abawi.me> (https://abawi.me)",
     "license": "MIT",
@@ -16,7 +16,7 @@
         "texlyre-busytex": "./scripts/cli.cjs"
     },
     "scripts": {
-        "build": "tsc && rollup -c",
+        "build": "tsc",
         "dev": "tsc --watch",
         "download-assets": "node scripts/download-assets.cjs",
         "upload-assets": "bash scripts/upload-to-release.sh",

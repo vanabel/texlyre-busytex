@@ -40,23 +40,33 @@ export class BusyTexRunner {
             const workerPath = `${this.config.busytexBasePath}/busytex_worker.js`;
             this.worker = new Worker(workerPath);
 
-            const timeout = setTimeout(() => {
-                reject(new Error('Timeout waiting for BusyTeX worker to initialize'));
-            }, 120000);
+            // After data downloads, the worker runs applet --version probes before posting { initialized }.
+            // Only { print } arrives during that phase; use an idle stall window refreshed on each print.
+            const INIT_STALL_MS = 900000;
+            let timeoutId: ReturnType<typeof setTimeout> | undefined;
+            const armInitTimeout = () => {
+                if (timeoutId !== undefined) clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    reject(new Error('Timeout waiting for BusyTeX worker to initialize'));
+                }, INIT_STALL_MS);
+            };
+            armInitTimeout();
 
             this.worker.onmessage = ({ data }) => {
                 if (data.initialized) {
-                    clearTimeout(timeout);
+                    if (timeoutId !== undefined) clearTimeout(timeoutId);
                     this.logger.debug('BusyTeX worker initialized:', data.initialized);
                     resolve();
                 } else if (data.exception) {
-                    clearTimeout(timeout);
+                    if (timeoutId !== undefined) clearTimeout(timeoutId);
                     reject(new Error(data.exception));
+                } else if (data.print) {
+                    armInitTimeout();
                 }
             };
 
             this.worker.onerror = (error) => {
-                clearTimeout(timeout);
+                if (timeoutId !== undefined) clearTimeout(timeoutId);
                 reject(new Error(`Worker error: ${error.message}`));
             };
 
@@ -150,15 +160,22 @@ export class BusyTexRunner {
                 return;
             }
 
-            const timeout = setTimeout(() => {
-                reject(new Error('Compilation timeout'));
-            }, 120000);
+            const COMPILE_STALL_MS = 900000;
+            let timeoutId: ReturnType<typeof setTimeout> | undefined;
+            const armCompileTimeout = () => {
+                if (timeoutId !== undefined) clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    reject(new Error('Compilation timeout'));
+                }, COMPILE_STALL_MS);
+            };
+            armCompileTimeout();
 
             this.worker.onmessage = ({ data }) => {
                 if (data.print) {
                     this.logger.debug(data.print);
+                    armCompileTimeout();
                 } else if (data.pdf !== undefined) {
-                    clearTimeout(timeout);
+                    if (timeoutId !== undefined) clearTimeout(timeoutId);
                     resolve({
                         success: data.exit_code === 0,
                         pdf: data.pdf,
@@ -169,7 +186,7 @@ export class BusyTexRunner {
                         logs: data.logs
                     });
                 } else if (data.exception) {
-                    clearTimeout(timeout);
+                    if (timeoutId !== undefined) clearTimeout(timeoutId);
                     reject(new Error(data.exception));
                 }
             };
