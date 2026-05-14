@@ -44,7 +44,7 @@ async function downloadAssets(destination = './public/core') {
     const busytexDir = path.join(dest, 'busytex');
 
     if (fs.existsSync(busytexDir) && fs.readdirSync(busytexDir).length > 0) {
-        console.log('✓ BusyTeX assets already exist');
+        console.log('✓ BusyTeX assets already exist (delete static/busytex or your destination busytex folder, then run download again)');
         return;
     }
 
