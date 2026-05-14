@@ -5,8 +5,9 @@ node_modules/
 dist/
 example/github-pages-example/dist/
 
-# BusyTeX assets (downloaded from GitHub Releases)
-public/core/busytex/
+# BusyTeX assets (large downloads from GitHub Releases); pipeline driver is tracked for reproducibility
+public/core/busytex/*
+!public/core/busytex/busytex_pipeline.js
 assets/
 
 # Archives
