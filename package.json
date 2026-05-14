@@ -20,6 +20,7 @@
         "dev": "tsc --watch",
         "download-assets": "node scripts/download-assets.cjs",
         "upload-assets": "bash scripts/upload-to-release.sh",
+        "publish:npm": "npm publish --access public --tag beta",
         "build:example": "cd example/github-pages-example && npm install",
         "build:pages-example": "npm run build && cd example/github-pages-example && npm install",
         "example": "cd example/github-pages-example && npm start",
